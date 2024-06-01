@@ -21,48 +21,45 @@ const ServerPage = () => {
         }
         fetch();
         const token = localStorageHelper.load('accessToken')
+        console.log(window.location.hostname);
         if (!window.Echo){
             window.Echo = new Echo({
                 broadcaster: 'socket.io',
-                host: window.location.hostname + ':3001',
-                withCredentials: true,
-                authEndpoint: '/api/broadcasting/auth',
-                auth: {
+                host:'localhost:6001',
+                // host: window.location.hostname + ':6001',
+                auth: {     
                     headers: {
                         Authorization: 'Bearer ' + token
                     }
-                }
+                },
             });
         }
-        window.Echo.channel('chat')
-            .listen('.chatevent', (e) => {
-                console.log(e);
-            });
+        // window.Echo.channel('chat')
+        //     .listen('.chatevent', (e) => {
+        //         console.log(e);
+        //     });
+        // window.Echo.private('chat')
+        //     .listen('.chatevent', (e) => {
+        //         console.log(e);
+        //     });
 
-        if (window.Echo){
-            console.log('Có');
-        }
-        else{
-            console.log('Không');
-        }
-
-        // echo.join(`chat`)
-        // .here((users) => {
-        //     console.log(users);
-        // })
-        // .joining((user) => {
-        //     console.log(user);
-        // })
-        // .leaving((user) => {
-        //     console.log(user);
-        // })
-        // .listen('.chatevent', (e) => {
-        //     console.log(e);
-        // })
-        // .error((error) => {
-        //     console.error(error);
-        // });
-
+        window.Echo.join('chat')
+        .here((users) => {
+            console.log(users);
+        })
+        .joining((user) => {
+            console.log(user);
+        })
+        .leaving((user) => {
+            console.log(user);
+        })
+        .listen('.chatevent', (e) => {
+            console.log(e);
+        })
+        .error((error) => {
+            console.error(error);
+        });
+        // Echo.leaveChannel(`orders.${this.order.id}`);
 
     }, [serverID]);
     // const [messages, setMessages] = useState([]);
@@ -73,11 +70,6 @@ const ServerPage = () => {
             "server_id" : serverID,
         });
         console.log(res);
-        // if (!message) return;
-
-        // socket.emit('message', message);
-        // setMessage('');
-        // console.log(message);
     };
     return (
         <div className='flex items-stretch'>

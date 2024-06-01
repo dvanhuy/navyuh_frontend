@@ -10,7 +10,7 @@ const ClientLayout = () => {
             try {
                 let res = await indexUserServers()
                 if (res?.status === 200) {
-                    setServers(res.data);
+                    setServers(res?.data);
                 }
             } catch (error) {
                 console.log(error);
