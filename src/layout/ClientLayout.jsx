@@ -1,23 +1,24 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import ServerButton from "../components/button/ServerButton";
 import Logo from '../assets/images/logonavyuh.png';
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { indexUserServers } from "../services/serverServices";
 const ClientLayout = () => {
     const [servers, setServers] = useState([]);
     useEffect(() => {
-        const fetch = async () => {
-            try {
-                let res = await indexUserServers()
-                if (res?.status === 200) {
-                    setServers(res?.data);
-                }
-            } catch (error) {
-                console.log(error);
+        updateServers();
+    },[]);
+    const updateServers = async()=>{
+        try {
+            let res = await indexUserServers()
+            if (res?.status === 200) {
+                setServers(res?.data);
             }
+        } catch (error) {
+            console.log(error);
         }
-        fetch();
-    }, []);
+    }
+
     return ( 
         <div className='flex items-stretch bg-white'>
             <div className='h-screen bg-background sticky top-0 left-0 overflow-y-auto flex flex-col gap-2 select-none pr-[10px] pt-[10px]'>
@@ -34,7 +35,7 @@ const ClientLayout = () => {
                 })}
             </div>
             <div className='flex-1 overflow-hidden'>
-                <Outlet />
+                <Outlet context={{updateServers}}/>
             </div>
       </div>
      );

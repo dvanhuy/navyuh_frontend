@@ -23,9 +23,14 @@ export function indexUserServers() {
   return callApi(url, 'get', {});
 }
 
-export function joinServer(idserver) {
+export function getJoinServer(idserver) {
   const url = BASE_URL + 'servers/join/'+idserver;
   return callApi(url, 'get');
+}
+
+export function joinServer(idserver) {
+  const url = BASE_URL + 'servers/join/'+idserver;
+  return callApi(url, 'post');
 }
 
 // client and admin

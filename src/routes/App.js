@@ -13,6 +13,7 @@ import Server from "../pagesAdmin/Server";
 import CreateServer from "../pagesAdmin/CreateServer";
 import ClientLayout from "../layout/ClientLayout";
 import ServerPage from "../pages/ServerPage";
+import JoinServer from "../pages/JoinServer";
 function App() {
   return (
     <Routes>
@@ -28,6 +29,7 @@ function App() {
       </Route>
       <Route element={<ClientLayout/>}>
         <Route index element={<Homepage />} />
+        <Route path="/servers/join/:serverID" element={<JoinServer />} />
         <Route path="/servers/:serverID" element={<ServerPage />} />
       </Route>
 
