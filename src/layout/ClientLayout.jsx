@@ -1,7 +1,7 @@
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import ServerButton from "../components/button/ServerButton";
 import Logo from '../assets/images/logonavyuh.png';
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { indexUserServers } from "../services/serverServices";
 const ClientLayout = () => {
     const [servers, setServers] = useState([]);

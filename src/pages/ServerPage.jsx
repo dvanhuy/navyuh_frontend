@@ -6,6 +6,11 @@ import { BASE_URL } from "../config";
 import callApi from "../services/callApiServices";
 import io from "socket.io-client";
 import { localStorageHelper } from "../services/localStorageHelper";
+import MessageSend from "../components/messageBox/MessageSend";
+import MessageReceive from "../components/messageBox/MessageReceive";
+import UserOnline from "../components/avatar/UserOnline";
+import UserOffline from "../components/avatar/UserOffline";
+import { indexMessages } from "../services/messageServices";
 
 
 const ServerPage = () => {
@@ -18,6 +23,8 @@ const ServerPage = () => {
         const fetch = async () => {
             let res = await showServer(serverID);
             setServer(res?.data)
+            let messageres = await indexMessages(serverID);
+            console.log(messageres);
         }
         fetch();
         const token = localStorageHelper.load('accessToken')
@@ -34,15 +41,6 @@ const ServerPage = () => {
                 },
             });
         }
-        // window.Echo.channel('chat')
-        //     .listen('.chatevent', (e) => {
-        //         console.log(e);
-        //     });
-        // window.Echo.private('chat')
-        //     .listen('.chatevent', (e) => {
-        //         console.log(e);
-        //     });
-
         window.Echo.join('chat')
         .here((users) => {
             console.log(users);
@@ -72,18 +70,55 @@ const ServerPage = () => {
         console.log(res);
     };
     return (
-        <div className='flex items-stretch'>
+        <div className='flex items-stretch h-screen'>
             <div className="w-[16rem] h-screen sticky top-0 left-0 overflow-hidden bg-white border-r-2 border-r-background pl-2">
                 <div className="w-full text-[25px] p-3">{server.name}</div>
                 <h2>id là {serverID}</h2>
                 <div>admin : {server.id_creator}</div>
             </div>
-            <div className='flex-1 overflow-hidden bg-white'>
+            <div className='flex-1 overflow-y-auto bg-white'>
                 <div>
-                    <div>Danh sách người dùng</div>
-                    <div> Lịch sử trò chuyện</div>
-                    <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} />
                     <button onClick={handleSendMessage}>Gửi</button>
+                    <div className="flex flex-col gap-3">
+                        <MessageSend/><MessageReceive/>
+                        <MessageSend/><MessageReceive/>
+                        <MessageSend/><MessageReceive/>
+                        <MessageSend/><MessageReceive/>
+                        <MessageSend/><MessageReceive/>
+                        <MessageSend/><MessageReceive/>
+                        <MessageSend/><MessageReceive/>
+                    </div>
+                    <div className="w-full ">
+                        <div className="">
+                            <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="w-[16rem] h-screen sticky top-0 right-0 overflow-auto bg-white border-r-2 border-r-background pl-2">
+                <div>
+                    <div className="mt-4 font-semibold">Trực tuyến - 1</div>
+                    <div className="mt-3">
+                        <UserOnline name={"Đinh Văn Huy Đinh Văn Huy Đinh Văn Huy"}/>
+                        <UserOnline name={"Đinh Văn Huy"}/>
+                        <UserOnline name={"Đinh Văn Huy"}/>
+                    </div>
+                </div>
+                <div>
+                    <div className="mt-4 font-semibold">Ngoại tuyến - 16</div>
+                    <div className="mt-3">
+                        <UserOffline name={"Đinh Văn Huy"}/>
+                        <UserOffline name={"Đinh Văn Huy"}/>
+                        <UserOffline name={"Đinh Văn Huy"}/>
+                        <UserOffline name={"Đinh Văn Huy"}/>
+                        <UserOffline name={"Đinh Văn Huy"}/>
+                        <UserOffline name={"Đinh Văn Huy"}/>
+                        <UserOffline name={"Đinh Văn Huy"}/>
+                        <UserOffline name={"Đinh Văn Huy"}/>
+                        <UserOffline name={"Đinh Văn Huy"}/>
+                        <UserOffline name={"Đinh Văn Huy"}/>
+                        <UserOffline name={"Đinh Văn Huy"}/>
+                    </div>
                 </div>
             </div>
         </div>

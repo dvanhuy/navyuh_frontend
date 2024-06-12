@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
-import { indexPosts } from "../services/postServieces";
+import { indexPosts } from "../services/postServices";
 import Posts from "../components/posts/Posts";
 import SearchField from "../components/inputField/SearchField";
 const Homepage = () => {
@@ -21,18 +21,6 @@ const Homepage = () => {
     return (
         <>
             <div className="flex w-full flex-row bg-[#f0f2f5]">
-                {/* <div className="border border-black bg-background ">
-                    <h1>email : {user.email}</h1>
-                    <h1>name : {user.name}</h1>
-                    <a href="/admin">Tới trang admin</a>
-                    <br />
-                    <a href="/login">Tới trang login</a>
-                </div> */}
-                {/* <div className="flex justify-center items-center w-full sticky top-0 left-0 h-[60px]">
-                    <div className="w-[500px]">
-                        <SearchField/>
-                    </div>
-                </div> */}
                 <div className="relative w-full flex justify-center flex-1">
                     <div className="w-[500px] relative mr-[250px]">
                         {posts.map((ev)=>{
