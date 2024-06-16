@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { showServer } from "../services/serverServices";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Echo from "laravel-echo";
 import { BASE_URL } from "../config";
 import callApi from "../services/callApiServices";
@@ -11,24 +11,31 @@ import MessageReceive from "../components/messageBox/MessageReceive";
 import UserOnline from "../components/avatar/UserOnline";
 import UserOffline from "../components/avatar/UserOffline";
 import { indexMessages } from "../services/messageServices";
+import { UserContext } from "../context/UserContext";
+import MessageField from "../components/inputField/MessageField";
+
 
 
 const ServerPage = () => {
     window.io = io;
+    const { user } = useContext(UserContext);
     const { serverID } = useParams()
     const [ server, setServer] = useState([]);
     const [ message, setMessage] = useState('');
+    const [ messages, setMessages] = useState([]);
 
     useEffect(() => {
         const fetch = async () => {
             let res = await showServer(serverID);
             setServer(res?.data)
             let messageres = await indexMessages(serverID);
-            console.log(messageres);
+            // console.log(messageres);
+            if (messageres?.status == 200){
+                setMessages(messageres?.data?.payload?.data)
+            }
         }
         fetch();
         const token = localStorageHelper.load('accessToken')
-        console.log(window.location.hostname);
         if (!window.Echo){
             window.Echo = new Echo({
                 broadcaster: 'socket.io',
@@ -41,22 +48,26 @@ const ServerPage = () => {
                 },
             });
         }
-        window.Echo.join('chat')
-        .here((users) => {
-            console.log(users);
-        })
-        .joining((user) => {
-            console.log(user);
-        })
-        .leaving((user) => {
-            console.log(user);
-        })
-        .listen('.chatevent', (e) => {
-            console.log(e);
-        })
-        .error((error) => {
-            console.error(error);
-        });
+        window.Echo.connector.socket.on('connect_error', (error) => {
+            console.error('Error Message:', error.message);
+            window.Echo.disconnect();
+          });
+        // window.Echo.join('chat')
+        // .here((users) => {
+        //     console.log(users);
+        // })
+        // .joining((user) => {
+        //     console.log(user);
+        // })
+        // .leaving((user) => {
+        //     console.log(user);
+        // })
+        // .listen('.chatevent', (e) => {
+        //     console.log(e);
+        // })
+        // .error((error) => {
+        //     console.error(error);
+        // });
         // Echo.leaveChannel(`orders.${this.order.id}`);
 
     }, [serverID]);
@@ -67,33 +78,27 @@ const ServerPage = () => {
             "message" : message,
             "server_id" : serverID,
         });
-        console.log(res);
     };
     return (
         <div className='flex items-stretch h-screen'>
             <div className="w-[16rem] h-screen sticky top-0 left-0 overflow-hidden bg-white border-r-2 border-r-background pl-2">
-                <div className="w-full text-[25px] p-3">{server.name}</div>
+                <div className="w-full text-[25px] p-3">{server?.name}</div>
                 <h2>id là {serverID}</h2>
-                <div>admin : {server.id_creator}</div>
+                <div>admin : {server?.id_creator}</div>
             </div>
-            <div className='flex-1 overflow-y-auto bg-white'>
-                <div>
-                    <button onClick={handleSendMessage}>Gửi</button>
-                    <div className="flex flex-col gap-3">
-                        <MessageSend/><MessageReceive/>
-                        <MessageSend/><MessageReceive/>
-                        <MessageSend/><MessageReceive/>
-                        <MessageSend/><MessageReceive/>
-                        <MessageSend/><MessageReceive/>
-                        <MessageSend/><MessageReceive/>
-                        <MessageSend/><MessageReceive/>
-                    </div>
-                    <div className="w-full ">
-                        <div className="">
-                            <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} />
-                        </div>
-                    </div>
+            <div className='flex flex-col flex-1 bg-white'>
+                    {/* <button onClick={handleSendMessage}>Gửi</button> */}
+                <div className="flex flex-col-reverse gap-3 overflow-y-auto pb-3 flex-1">
+                    {messages.map((message)=>{
+                        if (user.id === message.sender_id) {
+                            return (
+                                <MessageSend key={message.id}>{message.content}</MessageSend>
+                            )
+                        }
+                        return <MessageReceive key={message.id}>{message.content}</MessageReceive>
+                    })}
                 </div>
+                <MessageField/>
             </div>
             <div className="w-[16rem] h-screen sticky top-0 right-0 overflow-auto bg-white border-r-2 border-r-background pl-2">
                 <div>

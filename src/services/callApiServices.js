@@ -6,6 +6,9 @@ async function callApi(url, method ='get', data) {
   var header;
   if (token){
     header = {
+      // 'Accept': 'application/json',
+      // 'Content-Type': 'application/json',
+      // "Access-Control-Allow-Origin": "*",
       'Authorization': `Bearer ${token}`
     }
   }
