@@ -1,7 +1,9 @@
+import parse from 'html-react-parser';
+
 const Message = ({children}) => {
     return ( 
         <div>
-            {children}
+            {parse(children)}
         </div>
      );
 }

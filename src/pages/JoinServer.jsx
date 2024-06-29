@@ -23,7 +23,6 @@ const JoinServer = () => {
 
     const handleClickJoin = async(ev) => {
         let res = await joinServer(serverID);
-        console.log(res);
         updateServers();
     }
     return ( 

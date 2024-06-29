@@ -16,21 +16,19 @@ const MessageField = ({sendMessage}) => {
             setImages((prevImages)=>[...prevImages,imagepaste])
             e.preventDefault();
         }
-        // // text
-        // if (types.includes('text/plain') && types.includes('text/html')) {
-        //     let textpaste = e.clipboardData.getData('text/plain')
-        // }
     }
     const handleEnterKey = (e) => {
         if (e.keyCode === 13 && !e.shiftKey) {
             e.preventDefault();
-            handleSubmit()
+            if (messageText.current.textContent) {
+                handleSubmit()
+            }
         }
     }
     const handleSubmit = async () =>{
-        let message = messageText.current.textContent
-        messageText.current.innerHTML = ''
+        let message = messageText.current.innerHTML
         if (message){
+            messageText.current.innerHTML = ''
             sendMessage(message);
         }
     };
