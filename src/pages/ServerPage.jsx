@@ -14,6 +14,7 @@ import ImageReceive from "../components/messageBox/ImageReceive";
 import ImageSend from "../components/messageBox/ImageSend";
 import { messagedata } from "../zfakedata/messagedata";
 import DetailImageBox from "../components/box/DetailImageBox";
+import ServerInfo from "../components/childframe/ServerInfo";
 
 
 
@@ -21,10 +22,11 @@ const ServerPage = () => {
     window.io = io;
     const { user } = useContext(UserContext);
     const { serverID } = useParams()
+
     const [ server, setServer] = useState([]);
     const [ messages, setMessages] = useState([]);
     const [ status, setStatus] = useState('Đã gửi');
-    const [selectedImage, setSelectedImage] = useState('');
+    const [ selectedImage, setSelectedImage] = useState('');
     // Promise.allsettled()
 
     useEffect(() => {
@@ -110,9 +112,7 @@ const ServerPage = () => {
             {selectedImage && <DetailImageBox img={selectedImage} handleClose={()=>setSelectedImage(false)}/>}
             <div className="w-[16rem] h-screen sticky top-0 left-0 overflow-hidden 
                          bg-white border-r-2 border-r-background pl-2 max-[1000px]:hidden">
-                <div className="w-full text-[25px] p-3">{server?.name}</div>
-                <h2>id là {serverID}</h2>
-                <div>admin : {server?.id_creator}</div>
+                <ServerInfo/>
             </div>
             <div className='flex flex-col flex-1 bg-white'>
                 <div className="flex flex-col-reverse gap-3 overflow-y-auto pb-3 flex-1">
